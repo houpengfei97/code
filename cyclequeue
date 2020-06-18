@@ -1,0 +1,33 @@
+######加flag标记数组长度，实现循环队列###########
+class  Queue:
+    def __init__(self,capacity):
+        self.head = 0
+        self.tail = 0
+        self.count = 0
+        self.capacity = capacity
+        self.queue = [None]*self.capacity
+
+
+    def myenqueue(self,item):
+        if self.count == self.capacity:
+            return False
+        self.queue[self.tail] = item
+        self.tail = (self.tail+1)%self.capacity
+        self.count += 1
+        print ("enqueue:",self.head,self.tail,self.count)
+
+    def mydequeue(self):
+        if self.count == 0:
+            return False
+        data = self.queue[self.head]
+        self.head = (self.head + 1) % self.capacity
+        self.count -= 1
+        print("dequue:",data)
+        return data
+
+if __name__ == '__main__':
+    a = Queue(3)
+    a.myenqueue(1)
+    a.myenqueue(2)
+    a.myenqueue(3)
+    a.mydequeue()
