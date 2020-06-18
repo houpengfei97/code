@@ -1,0 +1,44 @@
+#####用数组实现队列##########
+class queue:
+    def __init__(self,capacity):
+        self.head = 0
+        self.tail = 0
+        self.count = 0
+        self.capacity = capacity
+        self.queue = [None]*self.capacity
+    def printdata(self,queuelist):
+        for i in range(self.capacity):
+            print(queuelist[i])
+
+    def enqueue(self,data):
+        if self.tail == self.capacity:
+            if self.head == 0:
+                print ('The queue is full')
+                return False
+            for i in range(self.head,self.tail):
+                self.queue[i - self.head] = self.queue[i]
+            self.tail = self.tail - self.head
+            self.head = 0
+            self.queue[self.tail] = data
+            self.tail +=1
+            print("Enquue:",self.head,self.tail)
+
+    def dequeue(self):
+        if self.head == self.tail:
+            return False
+        res = self.queue[self.head]
+        self.head += 1
+        print ("Dequeue:",res)
+        return res
+
+
+
+
+if __name__ == '__main__':
+    a=queue(3)
+    assert a.enqueue(1)
+    assert a.enqueue(2)
+    assert a.enqueue(3)
+    print(a.queue)
+    a.dequeue()
+    print(a.capacity)
