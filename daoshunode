@@ -1,0 +1,116 @@
+
+class LinkNode:
+    def __init__(self,val):
+        self.val = val
+        self.next = None
+
+class Kitem:
+    def get_length(self,head):
+        if head == None:
+            return None
+        cur = head
+        cnt = 1
+        while cur:
+            cnt +=1
+            cur=cur.next
+        return cnt
+
+    def findKitem(self,head,k):
+        if head == None :
+            print('链表为空')
+            return None
+        elif k > self.get_length(head) or k <= 0:
+            print('查找的节点超过链表的长度或者小于等于0')
+            return None
+        else:
+            slow = fast = head
+            count = 0
+            while fast != None and count < k:
+                count += 1
+                fast = fast.next
+            while fast != None:
+                slow = slow.next
+                fast = fast.next
+            return slow
+
+if __name__ == '__main__':
+    a1 = LinkNode(1)
+    a2 = LinkNode(2)
+    a3 = LinkNode(3)
+    a4 = LinkNode(4)
+    a5 = LinkNode(5)
+    a6 = LinkNode(6)
+    a5.next = a6
+    a4.next = a5
+    a3.next = a4
+    a2.next = a3
+    a1.next = a2
+    fk = Kitem()
+    # while a1:
+    #     print(a1.val)
+    #     a1 = a1.next
+    print(fk.findKitem(a1,2).val)
+
+
+
+
+#  #初始化链表的结点
+# class Node():
+#     def __init__(self,item):
+#         self.item = item
+#         self.next = None
+# #传入头结点，获取整个链表的长度
+# def length(headNode):
+#     if headNode == None:
+#         return None
+#     count = 0
+#     currentNode =headNode
+# #尝试了一下带有环的链表，计算长度是否会死循环，确实如此，故加上了count限制 = =||
+#     while currentNode != None and count <=1000:
+#         count+=1
+#         currentNode = currentNode.next
+#     return count
+# #获取倒数第K个结点的值，传入头结点和k值
+# def findrKnode(head,k):
+#     if head == None:
+#         return None
+# #如果长度小于倒数第K个值,则返回通知没有这么长
+#     elif length(head)<k:
+#         print("链表长度没有倒数第"+str(k)+"数")
+#         return None
+#     else:
+# #设置两个针，一个快，一个慢，都指向头结点
+#         fastPr = head
+#         lowPr = head
+#         count = 0
+# #让fastPr先走k个长度
+#         while fastPr!=None and count<k:
+#             count+=1
+#             fastPr = fastPr.next
+# #此时fastPr和lowPr同速前进，当fastPr走到尾部，lowPr此处的值正好为倒数的k值
+#         while fastPr !=None:
+#             fastPr = fastPr.next
+#             lowPr = lowPr.next
+#         return lowPr
+#
+# if __name__ == "__main__":
+#     node1 = Node(1)
+#     node2 = Node(2)
+#     node3 = Node(3)
+#     node4 = Node(4)
+#     node5 = Node(5)
+#     node6 = Node(6)
+#     node7 = Node(7)
+#     node8 = Node(8)
+#     node9 = Node(9)
+#     node10 = Node(10)
+#     node1.next = node2
+#     node2.next = node3
+#     node3.next = node4
+#     node4.next = node5
+#     node5.next = node6
+#     node6.next = node7
+#     node7.next = node8
+#     node8.next = node9
+#     node9.next = node10
+#     print(findrKnode(node1,5).item)
