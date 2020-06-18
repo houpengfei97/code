@@ -1,0 +1,46 @@
+class LinkNode:
+    def __init__(self,val):
+        self.val = val
+        self.next = None
+
+class iscycle(object):
+    def linkiscycle_arr(self,head):
+        data_set = set()
+        if head == None:
+            return None
+        while head:
+            if  head in data_set:
+                return True
+            data_set.add(head)
+            head = head.next
+        return False
+
+    def linkiscycle(self,head):
+        slow = fast = head
+        while (fast and fast.next):
+            slow = slow.next
+            fast = fast.next.next
+            if (slow == fast):
+                print('is cycle')
+                return True
+        return False
+
+if __name__ == '__main__':
+    a1 = LinkNode(9)
+    a2 = LinkNode(8)
+    a3 = LinkNode(5)
+    a4 = LinkNode(4)
+    a5 = LinkNode(3)
+    a6 = LinkNode(2)
+    a7 = LinkNode(1)
+    a8 = LinkNode(7)
+    a7.next = a8
+    a6.next = a7
+    a5.next = a6
+    a4.next = a5
+    a3.next = a4
+    a2.next = a3
+    a1.next = a2
+    fk = iscycle()
+    print(fk.linkiscycle_arr(a1))
+    print(fk.linkiscycle(a1))
