@@ -1,0 +1,28 @@
+
+class Selectsort(object):
+    def __init__(self,arr):
+        self.arr = arr
+        self.length = len(arr)
+
+    def selectsort(self):
+        if self.length <= 0:
+            return None
+        for i in range(0,self.length):
+            for j in range(i+1,self.length):
+                if self.arr[i] > self.arr[j]:
+                    self.arr[i],self.arr[j] = self.arr[j],self.arr[i]
+
+
+    def show_sort(self):
+        print("The sort result is:")
+        for i in self.arr:
+            print(i)
+        print('')
+
+if __name__ == '__main__':
+    datas = input("Please input the data:")
+    datas = datas.split()
+    datas = [int(datas[i]) for i in range(len(datas))]
+    bls = Selectsort(datas)
+    bls.selectsort()
+    bls.show_sort()
