@@ -1,0 +1,41 @@
+
+def countsort(arrlist):
+    ####判断该数组长度合理########
+    if len(arrlist) <= 1:
+        raise print("列表长度为空或者只有一个元素，无法进行排序")
+    #####数组的类型符合要求#######
+    if not isinstance(arrlist,(list)):
+        raise TypeError("Error input type")
+
+    ######定义一个中间数组，并初始化为0#######
+    """中间数组的作用是用来统计arrlist中每个元素的出现次数，中间数组的下标就是
+    arrlist中元素的值，中间数组的值就是arrlist中该下标值出现的次数。
+    之所以要取arrlist的最大值和最小值，是由于需要排序的一定范围的整数不一定是从0开始的，
+    为了避免空间位置的浪费，中间数组的长度就是最大值和最小值的差+1，此时最小值作为一个偏移量存在"""
+    minnum = min(arrlist)
+    maxnum = max(arrlist)
+    length = (maxnum - minnum)+1
+    tmparr = [0 for i in range(length)]
+
+    #######定义一个存放排序后数据的数组########
+    #resarr = [0 for i in range(len(arrlist))]
+    resarr = list(range(len(arrlist)))
+
+    ########第一遍循环遍历：用来遍历arrlist的每个元素，统计每个元素的出现次数，存入中间数组
+    for num in arrlist:
+        tmparr[num - minnum] = tmparr[num - minnum]+1
+
+    ########第二遍循环遍历中间数组，每个位置的值=当前值+前一个位置的值，用来统计出小于等于当前下标的元素个数
+    for i in range(1,length):
+        tmparr[i] = tmparr[i] + tmparr[i-1]
+
+    ########第三遍循环，将逆向遍历原始数组的值，将每个元素在中间数组中出现的次数
+    # （即中间数组的元素值）作为res数组的下标，将遍历的元素依次填入res数组中
+    for j in range(len(arrlist)-1,-1,-1):
+        resarr[tmparr[arrlist[j] - minnum]-1] = arrlist[j]
+        tmparr[arrlist[j] - minnum] -= 1
+    return resarr
+
+if __name__ == '__main__':
+    arr = [12,23,25,14,13,26,11,19,17,20]
+    print(countsort(arr))
