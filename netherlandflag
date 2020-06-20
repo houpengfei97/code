@@ -1,0 +1,40 @@
+######桶排序思路########
+"""遍历数组，统计三色的个数；根据三色的个数重排数组"""
+
+# def sortcolors(colorlist):
+#     bucket = [0]*3
+#     for i in colorlist:
+#         bucket[i]+=1
+#     del classmethod[:]
+#     for j in range(3):
+#         for k in range(bucket[j]):
+#             colorlist.append(j)
+
+########左右指针遍历排序#########
+"""设置两个指针begin指向前部的末尾的下一个元素（刚开始默认前部无0，所以指向第一个位置），end指向后部开头的前一个位置（刚开始默认后部无2，所以指向最后一个位置），然后设置一个遍历指针current，从头开始进行遍历。
+
+（1）若遍历到的位置为1，则说明它一定属于中部，根据总思路，中部的我们都不动，然后current向前移动一个位置。
+
+（2）若遍历到的位置为0，则说明它一定属于前部，于是就和begin位置进行交换，然后current向前移动一个位置，begin也向前移动一个位置（表示前边的已经都排好了）。
+
+（3）若遍历到的位置为2，则说明它一定属于后部，于是就和end位置进行交换，由于交换完毕后current指向的可能是属于前部的，若此时current前进则会导致该位置不能被交换到前部，所以此时current不前进。而同1），end向前移动一个位置"""
+
+def sortcolors(colornums):
+    head = 0
+    tail = len(colornums)-1
+    cur = 0
+    while cur <= tail:
+        if colornums[cur] == 0:
+            colornums[head],colornums[cur] = colornums[cur],colornums[head]
+            head += 1
+            cur += 1
+        elif colornums[cur] == 2:
+            colornums[cur],colornums[tail] = colornums[tail],colornums[cur]
+            tail -= 1
+        else:
+            cur += 1
+    return colornums
+
+if __name__ == '__main__':
+    arr = [1,0,2,0,1,1,2,0,2,0,2]
+    print(sortcolors(arr))
