@@ -1,0 +1,35 @@
+
+import time
+
+
+def quick_sort(arrlist,start,end):
+    if len(arrlist) <= 1:#数组为空或者只有一个元素
+        return arrlist
+    if start >= end:#递归退出条件
+        return
+    tmpdata = arrlist[start] #设定起始的基准元素
+    lowptr = start #lowptr为序列左边在开始位置从左到右移动的指针
+    highptr = end #highptr为序列右边末尾位置由右向左移动的指针
+    while lowptr < highptr: #如果左右指针未重合，则根据左右指针对应数据和基准数据的比较移动指针
+        while lowptr < highptr and arrlist[highptr] >= tmpdata:
+            highptr -= 1
+        #如果high指针指向的元素比基准数据小，则将high指向的数据放到low的位置上，此时high指向的位置为空，接下来移动low找到符合条件的元素当道此处
+        arrlist[lowptr] = arrlist[highptr]
+        print(arrlist)
+        #如果左右指针未重合，low指向的元素比基准元素小，则右移low指针
+        while lowptr < highptr and arrlist[lowptr] <= tmpdata:
+            lowptr += 1
+        arrlist[highptr] = arrlist[lowptr]
+
+    arrlist[lowptr] = tmpdata
+    quick_sort(arrlist,start,lowptr - 1)
+    quick_sort(arrlist,lowptr+1,end)
+
+if __name__ == '__main__':
+    arrlist = [3,22,5,7]
+    starttime = time.time()
+    res = quick_sort(arrlist,0,len(arrlist)-1)
+    endtime = time.time()
+    print(arrlist)
+    print(endtime - starttime)
+
