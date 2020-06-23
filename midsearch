@@ -1,0 +1,42 @@
+
+#####数组实现二分查找#######
+def MidSearch(arrlist,val):
+    arrlist_sort = sorted(arrlist)
+    print(arrlist_sort)
+    varlen = len(arrlist_sort) - 1
+    low = 0
+    high = varlen
+    if varlen <= 0:
+        raise print('The arrlist is null')
+        return False
+    while low <= high:
+        mid = low + ((high - low)>>1)
+        if arrlist_sort[mid] == val:
+            return mid
+        if arrlist_sort[mid] < val:
+            low = mid + 1
+        if arrlist_sort[mid] > val:
+            high = mid - 1
+
+
+#####递归实现######
+
+def mid_search(listarr,item):
+    listarr_tmp = sorted(listarr)
+    low = 0
+    high = len(listarr_tmp) - 1
+    if len(listarr_tmp) <= 0:
+        raise print('The arrlist is null')
+    while low <= high:
+        mid = low + ((high - low)>>1)
+        if listarr_tmp[mid] == item:
+            return mid
+        if listarr_tmp[mid] < item:
+            return mid_search(listarr_tmp,mid+1,high,item)
+        if listarr_tmp[mid] > item:
+            return mid_search(listarr_tmp,low,mid-1,item)
+
+if __name__ == '__main__':
+    listtest = [1,4,5,2,55,43,65,22,12,3,7,0]
+    print (MidSearch(listtest,0))
+    print(mid_search(listtest,5))
