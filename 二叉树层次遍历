@@ -1,0 +1,45 @@
+class TreeNode:
+    def __init__(self,r):
+        self.val = r
+        self.left = None
+        self.right = None
+
+
+class layersearch(object):
+    def level_order(self,root):
+        result,queue = [],[]
+        if not root:         ###判断树为空
+            return result
+        #######将队列中的元素取出，对应每层的树结点
+        queue.append(root)
+        while queue:      ######从上向下遍历整个树
+            tmp = queue.pop(0)         #####将根节点先出队列，放入结果列表，然后循环遍历每层的结点，放入列表
+            result.append(tmp.val)     #####存放当前遍历结点的对应数值
+            if tmp.left:
+                queue.append(tmp.left)
+            if tmp.right:
+                queue.append(tmp.right)
+        return result
+
+
+if __name__ == '__main__':
+    L = [5, 3, 6, 2, 4, 7]
+    node1 = TreeNode(5)
+    node2 = TreeNode(3)
+    node3 = TreeNode(6)
+    node4 = TreeNode(2)
+    node5 = TreeNode(4)
+    node6 = TreeNode(7)
+    node7 = TreeNode(5)
+    node8 = TreeNode(3)
+    node1.left = node2
+    node1.right = node3
+    node2.left = node4
+    node2.right = node5
+    node3.right = node6
+    node6.left = node7
+    node5.left = node8
+    obj = layersearch()
+    res = obj.level_order(node1)
+    print(res)
+
