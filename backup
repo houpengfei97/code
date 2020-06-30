@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 25 11:19:51 2019
+
+@author: 
+"""
+
+import requests
+import json
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import time
+
+_GET_TOKEN_URL = 'https://%s:%s/access/v1.0/token'
+_AK = r"AK_3RD_CLOUDOPS_CloudNetDebug"
+_SK = r"hIxcXuRK7zan8XGYUn+8aRJTtc+3qAOmCniNc3V1#gs="
+_AUTH_SERVER_IP = 'XXXXXX'
+_AUTH_PORT = '8443'
+_SERVICE_BACKUP_URL = 'https://%s:%s/v1/netchannel/external/backup/checkStatus'
+_SERVER_IP = 'XXXXXXXXX'
+_SERVER_PORT = '7440'
+
+_TIME_OUT=10
+_TRY_COUNT=3
+
+# 去除证书警告
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+_IP_LIST=["10.203.208.1","10.44.15.170","10.145.209.22","10.80.19.48","10.242.254.66","10.179.209.171","10.229.208.204",
+         "10.47.255.135","10.203.208.73","11.239.50.41"]
+def get_token():
+    try:
+        ak = _AK
+        sk = _SK
+        url = _GET_TOKEN_URL % (_AUTH_SERVER_IP,_AUTH_PORT)
+        kwargs = {}
+        headers = {'Content-Type':'application/json'}
+        kwargs['headers'] = headers
+        kwargs['timeout'] = _TIME_OUT
+        body = {'accessKey':ak,'secretKey':sk}
+        kwargs['data'] = json.dumps(body)
+        kwargs['verify'] = False
+        
+        for i in range(_TRY_COUNT):
+            response = requests.post(url,**kwargs)
+            if response.ok:
+                return response.json()['data']['id']
+            
+            time.sleep(1)
+    except Exception as e:
+        print("token error:",e)
+
+def backup_check_cnc(device_ip=["10.203.208.1"],cnc_token_id=str()):
+    headers = {
+            "Content-Type":"application/json",
+            "X-Request-Subject":"XXXXXX",
+            "X-Request-Token":cnc_token_id,
+            }
+    ip_data={"hostList":device_ip}
+    url=_SERVICE_BACKUP_URL %(_SERVER_IP,_SERVER_PORT)
+    cnc_backup_api = 'https://XXXXXX:7440/v1/netchannel/external/backup/checkStatus'
+    response = requests.post(url=cnc_backup_api,headers=headers,data=json.dumps(ip_data),verify=False,timeout=_TIME_OUT)
+    state_response = json.loads(response.text)
+    if response.status_code == 200:
+        res = state_response['data']
+        for(k,v) in res.items():
+            if v=='0':
+                res[k] = 1
+            elif v=='1':
+                res[k]=0
+        return res
+    return 0
+
+def backup_success_rate(res={u'10.47.255.135': 1}):
+    res = res
+    success_sum = sum(res.values())
+    all_sum = len(res)
+    return int((float(success_sum)/all_sum)*100)
+
+if __name__ == "__main__":
+    
+    cnc_token_id=get_token()
+    res={}
+    res = backup_check_cnc(_IP_LIST,cnc_token_id)
+    backup_rate = backup_success_rate(res)
