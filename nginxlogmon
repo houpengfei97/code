@@ -4,7 +4,7 @@
 from __future__ import division
 import os
 
-LOG_FILE = '/opt/cloud/logs/CloudOpsPortal-WebNginx/access.log'
+LOG_FILE = '/opt/logs/xx-WebNginx/access.log'
 POSITION_FILE = '/tmp/201901211518position.log'
 
 def get_position():
@@ -75,7 +75,7 @@ def handle_log(start_position,end_position):
             statusFail[cs]=0
 
     log.close()
-    print "==copNginx"
+    print "==Nginx"
     for key in statusAll.keys():
 #      print("statusAll_"+key+"="+str(statusAll[key])+","+"statusFail_"+key+"="+str(statusFail[key])),
       print "statusAll_%s=%s,statusFail_%s=%s,rt_%s=%s" % (key,statusAll[key],key,statusFail[key],key,rt[key]/statusAll[key])
