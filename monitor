@@ -1,0 +1,74 @@
+# /usr/bin/python
+# encoding:utf-8
+import csv
+import os
+import time
+
+'''
+标准版所有程序包：
+
+'''
+
+# 监控Glass资源信息
+class GlassStatusMonitor(object):
+    def __init__(self, pkg_name, count=1, interval=5):
+        if count < 0:
+            self.counter = 100000
+        else:
+            self.counter = count
+        self.interval = interval
+        self.data = [("time", "cpuinfo", "meminfo", "avali-mem","pid", "package")]
+        self.pkg_name = pkg_name
+        self.start_time = self.getCurrentTime()
+
+    # 资源监控过程
+    def monitor(self, pkg_name):
+        currenttime = self.getCurrentTime()
+        print("current time is:" + currenttime)
+        try:
+            result = os.popen("adb shell top -n 1 | grep " + pkg_name).readline().split()
+            cpuinfo = result[4].strip('%')
+            pid = result[0]
+            #获取meminfo,查询/proc/pid/status中的VmRSS值
+            meminfo = os.popen('adb shell "cat proc/' + pid + '/status" | grep VmRSS').readline().split()[1]
+            avalimem = os.popen('adb shell "cat proc/meminfo" | grep MemAvailable').readline().split()[1]
+            print("cpu used is:" + cpuinfo)
+            print('pid is:' + pid)
+            print("memory used is:" + meminfo)
+            print('system avaliable memory is:' + avalimem)
+        except:
+            cpuinfo = 'None'
+            pid = 'None'
+            meminfo = 'None'
+            avalimem = 'None'
+            print('Get resource info error!')
+        self.data.append([currenttime.split()[1], cpuinfo, meminfo, avalimem, pid, self.pkg_name])
+    
+    # 执行循环监控
+    def run(self):
+        # if os.path.exists('resource_monitor.csv'):
+        #     os.remove('resource_monitor.csv')
+        while self.counter >= 0:
+            try:
+                self.SaveToFile()
+                self.monitor(self.pkg_name)
+            finally:
+                self.counter = self.counter - 1
+                time.sleep(self.interval)
+
+    # 获取当前的时间
+    def getCurrentTime(self):
+        #currentTime = time.strftime("%H:%M:%S", time.localtime())
+        currentTime = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+        return currentTime
+
+    # 结果数据保存
+    def SaveToFile(self):
+        with open('result_' + self.start_time.replace(':','').strip('-') + '.csv', 'a',encoding='utf8',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(self.data[-1])
+
+
+if __name__ == "__main__":
+    m = GlassStatusMonitor("tt", -1, 10)
+    m.run()
